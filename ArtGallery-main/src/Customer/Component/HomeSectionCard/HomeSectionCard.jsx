@@ -20,7 +20,7 @@ export default function HomeSectionCard({ product }) {
       </div>
       <div className=''>
         <h3 className='font-medium text-gray-900'>
-          {product.artist}
+          {product.artistName}
         </h3>
       </div>
     </div>

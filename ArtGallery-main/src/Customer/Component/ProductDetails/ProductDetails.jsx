@@ -1,6 +1,3 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../../Redux/Reducers/cartReducer';
 import { Button } from '@mui/material'
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -89,7 +86,7 @@ console.log(product)
           <div className="lg:col-span-1 maxt-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
             <div className="lg:col-span-2 ">
               <h1 className="text-lg lg:text-xl font-semibold text-gray-900">{product.title}</h1>
-              <h1 className="text-lg lg:text-xl font-semibold text-gray-900">By {product.artist}</h1>
+              <h1 className="text-lg lg:text-xl font-semibold text-gray-900">By {product.artistName}</h1>
             </div>
 
             {/* Options */}

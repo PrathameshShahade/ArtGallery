@@ -67,13 +67,15 @@ public class Product {
 		this.title = title;
 	}
 
-    public String getArtist() {
-        return artistName;
-    }
 
-    public void setArtist(String artist) {
-        this.artistName = artist;
-    }
+
+	public String getArtistName() {
+		return artistName;
+	}
+
+	public void setArtistName(String artistName) {
+		this.artistName = artistName;
+	}
 
 	public String getDescription() {
 		return description;
@@ -127,6 +129,6 @@ public class Product {
 	}
 	
 	
-	
+
 	
 }

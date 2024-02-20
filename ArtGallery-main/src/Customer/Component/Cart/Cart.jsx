@@ -57,7 +57,6 @@ const Cart = () => {
         );
       
         console.log('Cart Cleared successfully:', response.data);
-        // Update cart data after clearing
         setCartData([]);
       } catch (error) {
         console.error('Error clearing cart:', error);

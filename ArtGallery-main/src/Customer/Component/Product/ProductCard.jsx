@@ -12,7 +12,7 @@ export default function ProductCard({productt}) {
             <div className="textpart bg-white p-3">
                 <div className="mb-2">
                     <p className="font-bold text-xl">{productt.title}</p>
-                    <p className="text-gray-600">By {productt.artist}</p>
+                    <p className="text-gray-600">By {productt.artistName}</p>
                 </div>
                 <div>
                     <p className="text-lg font-semibold text-gray-800">Rs.{productt.price}</p>

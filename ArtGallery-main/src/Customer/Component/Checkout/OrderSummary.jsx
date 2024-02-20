@@ -3,12 +3,14 @@ import AddressCard from '../AddressCard/AddressCard';
 import { Button } from '@mui/material';
 import CartItem from '../Cart/CartItem';
 import axios from 'axios';
+import { loadStripe } from '@stripe/stripe-js';
 
 const OrderSummary = () => {
   const [cartData, setCartData] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [discount, setDiscount] = useState(0);
-  const [deliveryCharge] = useState(99); // Assuming delivery charge is constant
+  const [deliveryCharge] = useState(99);
+  const [sessionId, setSessionId] = useState(null); 
 
   const fetchCartData = async () => {
     try {
@@ -42,6 +44,36 @@ const OrderSummary = () => {
   }, [cartData]);
 
   const totalAmount = totalPrice - discount + deliveryCharge;
+
+  const initiatePayment = async () => {
+    try {
+      const userId = sessionStorage.getItem('id');
+      const authToken = sessionStorage.getItem('token');
+      const response = await axios.post(`http://localhost:5454/api/carts/${userId}/payment`, {}, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+      setSessionId(response.data); // Update sessionId state
+    } catch (error) {
+      console.error('Error initiating payment:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (sessionId) {
+      const stripePromise = loadStripe('pk_test_51OlTgDSA5CvMmqRWz2YYk0JgDMXWw5GL5UJhQmGFYP3Ea9XSTx3iWGK3jNWEFAGgACvTSvMCAHgj3wWcdeMqADKJ00vgN8M5hX'); // Replace with your publishable key
+      stripePromise.then(stripe => {
+        stripe.redirectToCheckout({
+          sessionId: sessionId
+        }).then(result => {
+          if (result.error) {
+            console.error('Error redirecting to checkout:', result.error.message);
+          }
+        });
+      });
+    }
+  }, [sessionId]);
 
   return (
     <div>
@@ -77,7 +109,7 @@ const OrderSummary = () => {
                   <span>Total Amount</span>
                   <span className='text-green'>₹{totalAmount}</span>
                 </div>
-                <Button variant='contained' className='w-full mt-5' sx={{ px: "2rem", py: "1rem", bgcolor: "#9155fd" }}>
+                <Button onClick={initiatePayment} variant='contained' className='w-full mt-5' sx={{ px: "2rem", py: "1rem", bgcolor: "#9155fd" }}>
                   Checkout
                 </Button>
               </div>

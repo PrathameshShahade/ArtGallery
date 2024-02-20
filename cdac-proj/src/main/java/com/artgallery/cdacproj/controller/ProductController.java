@@ -1,6 +1,7 @@
 package com.artgallery.cdacproj.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,9 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.artgallery.cdacproj.dao.ProductDao;
 import com.artgallery.cdacproj.model.Product;
 import com.artgallery.cdacproj.service.ProductService;
+
 
 @RequestMapping("/")
 @RestController
@@ -22,6 +24,9 @@ public class ProductController {
 
 	@Autowired
 	ProductService pservice;
+	
+	@Autowired
+	ProductDao productRepository;
 
 
 	@GetMapping("/products") // controller for getting all products
@@ -84,6 +89,16 @@ public class ProductController {
 		else
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
+	
+	
+    @GetMapping("/artists/name")
+    public List<String> getUniqueArtists() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(Product::getArtistName)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 	
 	
 

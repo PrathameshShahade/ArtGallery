@@ -9,12 +9,12 @@ import Order from '../Customer/Component/Order/Order'
 import Checkout from '../Customer/Component/Checkout/Checkout'
 import Product from '../Customer/Component/Product/Product'
 import ProductDetails from '../Customer/Component/ProductDetails/ProductDetails'
-import Login from '../Customer/Pages/Login'
-import SignUp from '../Customer/Pages/SignUp'
 import ArtistPage from '../Customer/Pages/ArtistPage'
 import BecomeArtist from '../Customer/Pages/BecomeArtist'
 import AddProduct from '../Customer/Pages/AddProduct'
 import AboutUs from '../Customer/Pages/AboutUs'
+import ArtistProductPage from '../Customer/Pages/ArtistProductPage'
+
 
 const CustomerRouters = () => {
   return (
@@ -34,10 +34,13 @@ const CustomerRouters = () => {
             <Route path="/account/order/:orderId" element={<OrderDetails/>}></Route>
             <Route path="/aboutus" element={<AboutUs/>}></Route> 
             <Route path="/artist" element={<ArtistPage/>}></Route> 
+            <Route path="/artist/:artistName" element={<ArtistProductPage />} /> 
             <Route path="/seller" element={<BecomeArtist/>}></Route> 
             <Route path="/addproduct" element={<AddProduct/>}></Route>
 
-            {/* <ProductDetails/>
+            
+
+  {/* <ProductDetails/>
   <Cart/>
   <Checkout/>
     <Order/>

@@ -1,7 +1,6 @@
 import { Fragment} from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import {paintings} from '../../Data/paintings'
 import ProductCard from './ProductCard' 
 import {filters,singleFilter} from './FilterData'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
@@ -84,7 +83,6 @@ export default function Product() {
 
   const handleSortOptionChange = (option) => {
     setSelectedSortOption(option);
-    // Apply sorting logic here based on the selected option
     let sortedProducts = [...products];
     if (option.name === 'Newest') {
       sortedProducts.sort((a, b) => b.date - a.date); // Assuming each product has a `date` property

@@ -84,10 +84,10 @@ public class Cart {
     }
 
     public void updateTotal() {
-        float newTotal = 0;
+        float totalPrice = 0;
         for (Product product : products) {
-            newTotal += product.getPrice();
+            totalPrice += product.getDiscountedPrice();
         }
-        this.total = newTotal;
+        this.total = totalPrice-100;
     }
 }

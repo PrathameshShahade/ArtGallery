@@ -5,8 +5,11 @@ import com.artgallery.cdacproj.model.User;
 import com.artgallery.cdacproj.service.CartService;
 import com.artgallery.cdacproj.service.UserException;
 import com.artgallery.cdacproj.service.UserService;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
 
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,10 +25,10 @@ public class CartController {
     private final UserService userService;
 
     @Autowired
-    public CartController(CartService cartService,UserService userService) {
+    public CartController(CartService cartService, UserService userService) {
         this.cartService = cartService;
         this.userService = userService;
-        
+        Stripe.apiKey = "sk_test_51OlTgDSA5CvMmqRWgp3riVecNYVTGCPCqUfNZMiIzlIkECDcv9KZaFz4vyTmuojYnl56SXFZGT7mLgeDF3XQEXFB00RNMgB5kr";
     }
 
     @GetMapping("/{userId}")
@@ -40,7 +43,7 @@ public class CartController {
 
     @PostMapping("/{userId}/art/{artId}")
     public ResponseEntity<?> addProductToCart(@PathVariable Long userId, @PathVariable Long artId, Authentication authentication) {
-    	
+
         if (!userId.equals(getUserIdFromAuthentication(authentication))) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
@@ -68,7 +71,47 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
- // Helper method to get user ID from authentication object
+    @PostMapping("/{userId}/payment")
+    public ResponseEntity<?> processPayment(@PathVariable Long userId, Authentication authentication) {
+        // Check if authenticated user is the same as the requested user
+        if (!userId.equals(getUserIdFromAuthentication(authentication))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        }
+        try {
+            // Get cart details
+            Cart cart = cartService.findByUserId(userId);
+
+            // Calculate total amount
+            cart.updateTotal();
+            long totalAmount = (long) (cart.getTotal() * 100); // Convert to cents
+
+            // Create checkout session
+            SessionCreateParams.Builder builder = new SessionCreateParams.Builder();
+            builder.addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD);
+            builder.setMode(SessionCreateParams.Mode.PAYMENT);
+            builder.setSuccessUrl("http://localhost:3000/success");
+            builder.setCancelUrl("http://localhost:3000/cancel");
+            builder.addLineItem(SessionCreateParams.LineItem.builder()
+                    .setQuantity(1L)
+                    .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
+                            .setCurrency("inr")
+                            .setUnitAmount(totalAmount)
+                            .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                    .setName("Art Gallery Purchase")
+                                    .build())
+                            .build())
+                    .build());
+            SessionCreateParams params = builder.build();
+            Session session = Session.create(params);
+
+            // Return session ID to frontend to complete the payment
+            return ResponseEntity.ok(session.getId());
+        } catch (StripeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create checkout session: " + e.getMessage());
+        }
+    }
+
+    // Helper method to get user ID from authentication object
     private Long getUserIdFromAuthentication(Authentication authentication) {
         String email = authentication.getName();
         try {
@@ -85,7 +128,4 @@ public class CartController {
             return null;
         }
     }
-
-
-
 }

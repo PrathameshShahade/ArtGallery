@@ -80,7 +80,6 @@ const Navbar = () => {
                             }}
                             getContentAnchorEl={null}
                         >
-                            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
                             <MenuItem onClick={()=>navigate("/account/order")}>Order</MenuItem>
                             <MenuItem onClick={handleLogout}>Logout</MenuItem>
                         </Menu>

@@ -3,8 +3,7 @@ import React from 'react';
 const AddressCard = ({ formData }) => {
   // Check if formData is an array
   if (!Array.isArray(formData)) {
-    // If not an array, display a message indicating that the data is invalid
-    return <p>Data is not in the expected format</p>;
+    return null;
   }
 
   return (

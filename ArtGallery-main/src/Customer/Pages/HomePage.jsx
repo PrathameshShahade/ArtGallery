@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import MainCarousel from '../Component/HomeCarsole/MainCarasole';
 import HomeSectionCarosel from '../Component/HomeSectionCarosel/HomeSectionCarosel';
-import productService from '../Data/productService'; // Change import statement
+import productService from '../Data/productService';
+import FeedbackPage from './FeedbackPage';
 
 export default function HomePage() {
   const [paintingsData, setPaintingsData] = useState([]);
@@ -38,6 +39,7 @@ export default function HomePage() {
         <HomeSectionCarosel data={digitalArtData} sectionName={"Digital Art"} />
         <HomeSectionCarosel data={canvasData} sectionName={"Canvas"} />
       </div>
+      <FeedbackPage/>
     </div>
   );
 }

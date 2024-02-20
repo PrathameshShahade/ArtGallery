@@ -27,7 +27,7 @@ export default function Checkout() {
 
   React.useEffect(() => {
     if (step) {
-      setActiveStep(parseInt(step));
+      setActiveStep(parseInt(step-1));
     }
   }, [step]);
 
@@ -88,7 +88,7 @@ export default function Checkout() {
             <Box sx={{ flex: "1 1 auto" }} />
           </Box>
           <div className="my-5">
-            {activeStep === 2 ? (
+            {activeStep === 1 ? (
               <DeliveryAddressForm handleNext={handleNext}/>
             ) : (
               <OrderSummary />
